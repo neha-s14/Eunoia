@@ -3,11 +3,14 @@ package Fragments
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.VibrationAttributes
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
@@ -15,10 +18,13 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.none.eunoia.AccountSettingsActivity
+import com.none.eunoia.Adapter.PostAdapter
+import com.none.eunoia.Model.Post
 import com.none.eunoia.Model.User
 import com.none.eunoia.R
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_profile.view.*
+import java.util.ArrayList
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -31,6 +37,11 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class profileFragment : Fragment() {
+    private var postAdapter: PostAdapter?=null
+    private var postList:MutableList<Post>?=null
+    private var donationList: MutableList<Post>?=null
+
+
     private lateinit var profileId:String
     private lateinit var firebaseUser: FirebaseUser
     // TODO: Rename and change types of parameters
@@ -51,7 +62,7 @@ class profileFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view= inflater.inflate(R.layout.fragment_profile, container, false)
-        val pref=context?.getSharedPreferences("PREFS", Context.MODE_PRIVATE)
+            val pref=context?.getSharedPreferences("PREFS", Context.MODE_PRIVATE)
         firebaseUser= FirebaseAuth.getInstance().currentUser!!
         if(pref!=null)
         {
@@ -65,6 +76,22 @@ else if(profileId!=firebaseUser.uid)
         {
     checkFollowAndFollowingButtonStatus()
         }
+
+            // Inflate the layout for this fragment
+            var recyclerView: RecyclerView?=null
+            recyclerView=view.findViewById(R.id.recyler_view_profile)
+            val linearLayoutManager=LinearLayoutManager(context)
+            linearLayoutManager.reverseLayout=true
+            linearLayoutManager.stackFromEnd=true
+            recyclerView.layoutManager=linearLayoutManager
+            postList= ArrayList()
+            postAdapter=context?.let{
+                PostAdapter(it,postList as ArrayList<Post>)
+            }
+            recyclerView.adapter=postAdapter
+retrievePost()
+
+
         view.edit_account_settings_account_btn.setOnClickListener {
             val getButtonText=view.edit_account_settings_account_btn.text.toString()
             when {
@@ -103,10 +130,116 @@ else if(profileId!=firebaseUser.uid)
 
             }
         }
+
         getFollowers()
         getFollowings()
+        getDonations()
         userInfo()
+        view.images_save_btn.setOnClickListener{
+            getdonationList()
+        }
+        view.images_grid_view_btn.setOnClickListener {
+            retrievePost()
+        }
         return view
+    }
+
+    private fun getdonationList()     {
+        donationList=ArrayList()
+        val donationRef= FirebaseDatabase.getInstance().reference
+            .child("Users").child(profileId)
+            .child("donations")
+        donationRef.addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(p0: DataSnapshot) {
+                if (p0.exists()) {
+                    (donationList as ArrayList<String>).clear()
+                    for (snapshot in p0.children)
+                    {
+                        snapshot.key?.let{(donationList as ArrayList<String>).add(it)}
+                    }
+                    donatedPosts()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+    }
+
+
+    private fun donatedPosts() {
+        val postsRef= FirebaseDatabase.getInstance().reference.child("Posts")
+        postsRef.addValueEventListener(object:ValueEventListener{
+            override fun onDataChange(p0: DataSnapshot) {
+                postList?.clear()
+                for(snapshot in p0.children)
+                {
+                    val post=snapshot.getValue(Post::class.java)
+
+                    for(id in (donationList as ArrayList<String>))
+                    {
+                        if(post!!.getPostid()==id.toString())
+                        {
+                            postList!!.add(post)
+                        }
+                        postAdapter!!.notifyDataSetChanged()
+                    }
+                }
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+
+    }
+    private fun retrievePost() {
+        val postsRef= FirebaseDatabase.getInstance().reference.child("Posts")
+        postsRef.addValueEventListener(object:ValueEventListener{
+            override fun onDataChange(p0: DataSnapshot) {
+                postList?.clear()
+                for(snapshot in p0.children)
+                {
+                    val post=snapshot.getValue(Post::class.java)
+
+                        if(post!!.getPublisher()==profileId)
+                        {
+                            postList!!.add(post)
+                        }
+                        postAdapter!!.notifyDataSetChanged()
+
+                }
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+
+    }
+
+
+
+
+    private fun getDonations() {
+        val userRef=FirebaseDatabase.getInstance().reference.child("Users")
+            .child(profileId).child("donations")
+        userRef.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists())
+                {
+                    view?.total_donations!!.text=snapshot.childrenCount.toString()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+
     }
 
     private fun checkFollowAndFollowingButtonStatus() {
@@ -114,6 +247,7 @@ else if(profileId!=firebaseUser.uid)
             FirebaseDatabase.getInstance().reference
                 .child("Follow").child(it1.toString())
                 .child("Following")
+
         }
     if(followingRef!=null)
     {
@@ -164,6 +298,10 @@ else if(profileId!=firebaseUser.uid)
         followersRef.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(p0: DataSnapshot) {
 if(p0.exists())
+{
+    view?.total_followers?.text=p0.childrenCount.toString()
+}
+                else
 {
     view?.total_followers?.text=p0.childrenCount.toString()
 }

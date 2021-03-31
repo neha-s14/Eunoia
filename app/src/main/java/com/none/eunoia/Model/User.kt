@@ -6,16 +6,16 @@ class User {
     private var bio: String = ""
     private var image: String = ""
     private var uid: String = ""
+    private var email:String=""
 
     constructor(){}
 
-    constructor(username: String, fullname: String, bio: String, image: String, uid: String) {
+    constructor(username: String, fullname: String, bio: String, image: String, uid: String, email: String) {
         this.username = username
         this.fullname = fullname
         this.bio = bio
         this.image = image
         this.uid = uid
-
     }
 
     fun getUsername(): String {
@@ -36,6 +36,9 @@ return fullname
     {
         return bio
     }
+    fun getEmail():String{
+        return email
+    }
     fun setBio(bio: String)
     {
         this.bio=bio
@@ -53,9 +56,14 @@ return fullname
     {
         return uid
     }
+
     fun setUid(uid: String)
     {
         this.uid=uid
+    }
+    fun setEmail(email: String)
+    {
+        this.email=email
     }
 
 

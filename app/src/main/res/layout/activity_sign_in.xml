@@ -5,11 +5,11 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/back_ui"
+
         tools:context=".SignInActivity">
-<ImageView android:layout_width="160dp" android:layout_height="90dp"
-android:src="@drawable/instagram"
-           app:tint="@android:color/white"
+<ImageView android:layout_width="200dp" android:layout_height="200dp"
+android:src="@drawable/eunoia_logo"
+           android:scaleType="centerCrop"
 android:layout_centerHorizontal="true"
 android:layout_marginTop="110dp"
 android:id="@+id/logo"/>
@@ -34,6 +34,7 @@ android:id="@+id/logo"/>
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginTop="6dp"
+            android:textColor="@color/colorBlack"
             android:inputType="textPassword"
             android:id="@+id/password_login"
             android:hint="Password"/>
@@ -45,11 +46,12 @@ android:id="@+id/logo"/>
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginTop="6dp"
+            android:backgroundTint="@color/colorPrimary"
     android:background="@android:color/white"
     android:text="Login"
     android:textAllCaps="false"
     android:textSize="17dp"
-    android:textColor="@android:color/black"/>
+    android:textColor="@android:color/white"/>
     <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

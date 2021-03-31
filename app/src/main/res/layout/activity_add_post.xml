@@ -59,7 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="6"
-            android:hint="say something about your post"
+            android:hint="Please write about the location and cause. If you want to donate food, please mention quantity"
             android:layout_margin="5dp"
 
     />

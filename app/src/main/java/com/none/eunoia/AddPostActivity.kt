@@ -35,6 +35,9 @@ class AddPostActivity : AppCompatActivity() {
         CropImage.activity()
             .setAspectRatio(2, 1)
             .start(this@AddPostActivity)
+        close_add_post_btn.setOnClickListener {
+            startActivity(Intent(this,MainActivity::class.java))
+        }
 
     }
 

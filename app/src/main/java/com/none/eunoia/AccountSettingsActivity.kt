@@ -1,5 +1,6 @@
 package com.none.eunoia
 
+import Fragments.profileFragment
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
@@ -64,6 +65,9 @@ uploadImageAndUpdateInfo()
 {
     updateUserInfoOnly()
 }
+        }
+        close_profile_btn.setOnClickListener {
+            startActivity(Intent(this,profileFragment()::class.java))
         }
         userInfo()
     }

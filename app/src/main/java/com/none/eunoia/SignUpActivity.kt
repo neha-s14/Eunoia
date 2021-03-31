@@ -68,7 +68,7 @@ class SignUpActivity : AppCompatActivity() {
         userMap.put("fullname", fullName)
         userMap.put("username", userName)
         userMap.put("email", email)
-        userMap.put("bio", "Hey I am using Instagram")
+        userMap.put("bio", "Hey I am using Eunoia")
         userMap.put(
             "image",
             "https://firebasestorage.googleapis.com/v0/b/eunoia-e467c.appspot.com/o/Default%20Images%2Fprofile.png?alt=media&token=d604bed2-b670-41cf-86b9-e9daae129b3b"
