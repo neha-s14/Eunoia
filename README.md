@@ -6,6 +6,8 @@ more than 690 million people went hungry in 2019.
 Also [FAO](http://www.fao.org/zhc/hunger-facts/en/#:~:text=Between%20now%20and%202050%2C%20the,increase%20in%20global%20food%20production.&text=A%20total%20of%20842%20million,to%20conduct%20an%20active%20life.) estimates that by 2050, demand for food will increase by 60%. 
 While hunger declines to go down, a huge amount of food is being wasted daily. With enormous events comes great responsibilities of dining and so does amount of food wastage goes up. While most of it is due to poor management of food. But we cannot neglect the fact that this food can fill some empty stomachs.
  Eunoia has taken the responsibilty of eradicating hunger as much as possible by serving as a platform where anyone with food fit to be eaten and in a good quantity can reach out to volunteers(NGOs) and people who need it. 
+ ## INSTALLATION
+ Download the file [Eunoia](https://github.com/neha-s14/Eunoia/blob/main/app-debug.apk) and install it.
  ## BUILT WITH
  [Firebase](https://firebase.google.com/)<br>
  [Android](https://www.android.com/intl/en_in/)
